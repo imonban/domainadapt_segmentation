@@ -13,10 +13,12 @@ class LoadFromFile (argparse.Action):
         
     def __build_parse_arge__(self,arg_key,arg_dict,file_action): 
         arg_name =f"--{arg_key}" 
-        arg_val = str(arg_dict[arg_key]) 
-        file_action[arg_name].required=False 
+        arg_val = str(arg_dict[arg_key]).replace("'","\"") # list of text need to be modified so they can be parsed properly 
+        try: 
+            file_action[arg_name].required=False 
+        except: 
+            raise KeyError(f"The Key {arg_name} is not an expected parameter. Delete it from config or update build_args method in helper_utils.configs.py")
         return arg_name,arg_val
-
 def warn_optuna(s:str): 
     """ Take string input of parser for optuna param and just output a warning 
     Converts string to boolean for proper reading 
@@ -56,6 +58,12 @@ def build_args():
         help="Initial Learning rate of our model ",
     )
     parser.add_argument(
+        "--momentum",
+        required=True,
+        type=float,
+        help="momentum of my optimizer",
+    )
+    parser.add_argument(
         "--model",
         required=True,
         type=str,
@@ -93,6 +101,14 @@ def build_args():
         '--run_param_search',type=warn_optuna,required=True,default=False,help='Whehter to run optuna param'
     )
     parser.add_argument('--dev',type=bool,required=False,default=False,help='Specify a dev run. Subsamples training data to be just 10% so you can iterate faster')
+    parser.add_argument('--num_seg_labels',type=int,required=True,default=2,help='Number of segmentation labels. It includes background. i.e if doing foreground vs background  num_seg_labels is 2')
+    parser.add_argument('--train_transforms',type=json.loads,required=True,help='List of Names of train transforms and augmentations in form [load,rotate]')
+    parser.add_argument('--test_transforms',type=json.loads,required=True,help='List of Names of test transforms and augmentations in form [load] should be subset of train transforms') # TODO: asert test is subset of train excluding rands
+    parser.add_argument('--img_key_name',required=True,type=str)
+    parser.add_argument('--lbl_key_name',required=True,type=str)
+    parser.add_argument('--batch_size',required=True,type=int)
+    parser.add_argument('--cache_dir',type=str,required=True)
+    parser.add_argument('--train_mode',type=str,required=True,choices=['vanilla','debias','dinsdale'])
     add_rand_crop_params(parser)
     add_rand_flip_params(parser)
     add_rand_affine_params(parser)
@@ -102,8 +118,7 @@ def build_args():
     return parser
 
 def get_params(): 
-    parser  = build_args()
-    args = parser.parse_args() 
+    args = build_args()
     my_args = args.parse_args() 
     arg_dict = vars(my_args)
     return arg_dict

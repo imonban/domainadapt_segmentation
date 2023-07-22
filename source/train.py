@@ -12,6 +12,7 @@ from data_factories.kits_factory import kit_factory
 from monai.data import DataLoader
 from models.model_factory import model_factory
 from monai.losses import DiceCELoss
+import torch._dynamo 
 
 torch._dynamo.config.suppress_errors = True
 torch.multiprocessing.set_sharing_strategy("file_system")
@@ -20,7 +21,7 @@ torch.multiprocessing.set_sharing_strategy("file_system")
 def main(): 
     conf = help_configs.get_params()
     dset = kit_factory("cached")
-    train, val, test = help_io(conf["data_path"])
+    train, val, test = help_io.load_data(conf["data_path"])
     # use short circuitting to check if dev is  a field
     if "dev" in conf.keys() and conf["dev"] == True:
         print(
@@ -36,7 +37,7 @@ def main():
     train_transform, val_transform = help_transforms.gen_transforms(conf)
     batch_size = conf["batch_size"]
     cache_dir = conf["cache_dir"]
-    os.path.makedirs(cache_dir,exist_ok=True)
+    os.makedirs(cache_dir,exist_ok=True)
     train_ds = dset(
         train,
         transform=train_transform,
@@ -52,7 +53,7 @@ def main():
         cache_dir=cache_dir 
     )
     num_workers = conf["num_workers"]
-    if conf["mode"] == "debias" or conf["mode"] == "mixed":
+    if conf["train_mode"] == "debias" or conf["train_mode"] == "mixed":
         sampler = help_utils.makeWeightedsampler(train)
         shuffle = False
     else:
@@ -81,7 +82,7 @@ def main():
         collate_fn=help_transforms.ramonPad()
     )
     loaders = (train_loader, val_loader, test_loader)
-    DEVICE = torch.device(conf["cuda"])
+    DEVICE = torch.device(conf["device"])
     model = model_factory(config=conf)
     if "pretrained" in conf.keys():
         #TODO add support for continuing training by providing optinal path to checkpoint
@@ -95,7 +96,7 @@ def main():
     loss_function = DiceCELoss(
         include_background=True, reduction="mean", to_onehot_y=True, softmax=True
     )
-    if (conf["mode"] != "vanilla"):
+    if (conf["train_mode"] == "vanilla"):
         # lr should be 0.01 for these experiments
         optimizer = torch.optim.SGD(model.parameters(), lr, momentum=momentum)
         lr_scheduler = torch.optim.lr_scheduler.PolynomialLR(

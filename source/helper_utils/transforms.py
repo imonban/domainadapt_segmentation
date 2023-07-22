@@ -31,14 +31,6 @@ from monai.data.utils import list_data_collate
 
 
 
-def build_transform(config):
-    # these are the transforms used by my model
-    train_transforms = [get_transform(e,config) for e in config['train_transforms']]
-    val_transform = [get_transform(e,config) for e in config['test_transforms']]
-    train_transforms = transforms.Compose(train_transforms)
-    val_transform = transforms.Compose(val_transform)
-    return train_transforms, val_transform
-
 def get_transform(name,conf): 
     img_k =  conf['img_key_name']
     lbl_k =  conf['lbl_key_name'] 
@@ -58,7 +50,7 @@ def get_transform(name,conf):
         bmax = conf['scale_intensity_bmax']
         clip = conf['scale_intensity_clip']
         return ScaleIntensityRanged(keys=img_k,a_min=vmin,a_max=vmax,b_min=bmin,
-        b_max=bmax,clip=True)
+        b_max=bmax,clip=clip)
     if name =='crop_foreground': 
         return CropForegroundd(keys=[img_k,lbl_k],source_key=img_k)
     if name =='orient':

@@ -1,9 +1,17 @@
 {
 "data_path":"/media/Datacenter_storage/ramon_dataset_curations/domainadapt_segmentation/data/kits21_data.pkl",
+"cache_dir":"/home/m261066/cache_3/",
+"batch_size":2,
 "learn_rate":0.01,
+"momentum":0.99,
 "model":"unet",
+"train_mode":"vanilla",
 "epochs":500,
 "num_workers": 4,
+"img_key_name":"image",
+"lbl_key_name":"label",
+"train_transforms":["load","channel_first","scale_intensity","orient","spacing","crop_foreground","rand_crop_label","spatial_pad","rand_shift_intensity_offset","rand_flip","rand_affine"],
+"test_transforms":["load","channel_first","scale_intensity","orient","spacing","crop_foreground"],
 "spacing_vox_dim":[124,124,32],
 "spacing_pix_dim":[1,1,1],
 "spacing_img_interp": "bilinear",
@@ -26,5 +34,6 @@
 "rand_shift_intensity_prob": 0.75,
 "device":"cuda:0",
 "run_param_search":false,
-"dev":true
+"dev":true,
+"num_seg_labels":2
 }
