@@ -5,7 +5,5 @@
 ./source/helper_utils/utils.py:34:    #TODO USE THIS IN TEST PHASE OF FINAL MODEL 
 ./source/helper_utils/transforms.py:50:        #TODO make it interchangeable with the GCP one 
 ./source/helper_utils/transforms.py:89:        #TODO: SEARCH FOR REASONING TO HAVE VARIABLE X,Y,Z. I guess it would pick up on extra noise from resampling volumes? 
-./source/helper_utils/transforms.py:99:        rotation_range = conf['rand_affine_rotation_range']  #TODO: HAVE IT BE A TUPLE ALREADY 
-./source/helper_utils/transforms.py:100:        scale_range = conf['rand_affine_scale_range'] #TODO: HAVE IT BE A TUPLE ALREADY 
 ./source/helper_utils/transforms.py:126:    TODO:  Do not understand why default monai doesn't have this. Cary over of past 
 ./.git/hooks/pre-commit:3:grep -rnw 'TODO' . > ./todo.txt 

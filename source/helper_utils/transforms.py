@@ -96,9 +96,9 @@ def get_transform(name,conf):
         img_interp = conf['spacing_img_interp'] 
         lbl_interp = conf['spacing_lbl_interp']
         affine_prob = conf['rand_affine_prob'] 
-        rotation_range = conf['rand_affine_rotation_range']  #TODO: HAVE IT BE A TUPLE ALREADY 
-        scale_range = conf['rand_affine_scale_range'] #TODO: HAVE IT BE A TUPLE ALREADY 
-        return RandAffined(keys=[img_k,lbl_k],mode=[img_interp,lbl_interp],prob=affine_prob,scale_range=scale_range)
+        rotation_range = conf['rand_affine_rotation_range'] 
+        scale_range = conf['rand_affine_scale_range']
+        return RandAffined(keys=[img_k,lbl_k],mode=[img_interp,lbl_interp],prob=affine_prob,scale_range=scale_range,rotate_range=rotation_range)
 
 def gen_transforms(confi): 
     train_transform = Compose(
