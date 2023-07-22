@@ -39,7 +39,7 @@ def main():
     batch_size = conf["batch_size"]
     cache_dir = conf["cache_dir"]
     os.makedirs(cache_dir, exist_ok=True)
-    train_ds = (dset(train, transform=train_transform, cache_dir=cache_dir),)
+    train_ds = dset(train, transform=train_transform, cache_dir=cache_dir)
     val_ds = dset(val, transform=val_transform, cache_dir=cache_dir)
     test_ds = dset(test, transform=val_transform, cache_dir=cache_dir)
     num_workers = conf["num_workers"]
@@ -80,7 +80,7 @@ def main():
         model.load_state_dict(ck["state_dict"])
         print("state dict loaded")
     model = model.to(torch.float32).to(DEVICE)
-    model = torch.compile(model, fullgraph=False, dynamic=True)
+    #model = torch.compile(model, fullgraph=False, dynamic=True)
 
     # TODO: make the dice metric and loss function modifiable
     loss_function = DiceCELoss(
