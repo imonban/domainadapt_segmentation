@@ -24,6 +24,7 @@
 "rand_gauss_sigma": [0.01,0.02],
 "rand_shift_intensity_offset": 0.001,
 "rand_shift_intensity_prob": 0.75,
-"cuda":"cuda:0",
-"run_param_search":false
+"device":"cuda:0",
+"run_param_search":false,
+"dev":true
 }

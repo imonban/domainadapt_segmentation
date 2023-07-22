@@ -1,5 +1,12 @@
+import random 
+import math 
+from glob import glob 
+import numpy as np 
+from torch.utils.data import WeightedRandomSampler
 
-
+def subsample_list(my_list:list,perc:float):  
+    num_samples = int(math.floor(len(my_list)*perc))
+    return random.sample(my_list,num_samples)
 def figure_version(path : str,load_past=False):
     #  when saving model  checkpoints and logs. Need to make sure i don't overwrite previous experiemtns
     avail = glob(f"{path}/run_*")
@@ -28,3 +35,14 @@ def dice_score(truth,pred):
     seg = pred.flatten() 
     gt = truth.flatten() 
     return  np.sum(seg[gt==1])*2.0 / (np.sum(seg) + np.sum(gt))
+def makeWeightedsampler(ds):
+    phase_list = [e["phase"] for e in ds]
+    cls_counts = [0, 0]
+    cls_counts[0] = len(phase_list) - sum(phase_list)
+    cls_counts[1] = sum(phase_list)
+    cls_weights = [1 / e for e in cls_counts]
+    sample_weight = list()
+    for e in phase_list:
+        sample_weight.append(cls_weights[e])
+    sample_weight = torch.tensor(sample_weight)
+    return WeightedRandomSampler(sample_weight, len(sample_weight))

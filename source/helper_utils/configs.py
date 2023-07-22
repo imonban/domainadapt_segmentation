@@ -87,11 +87,12 @@ def build_args():
         "--orientation_axcode", type=str, required=True, default="RAS", choices=["RAS"],help='This is the orientation of the MRI/CT. Careful when selecting'
     ) 
     parser.add_argument(
-        "--cuda", type=str, required=True, default="cuda:0",help='GPU parameter'
+        "--device", type=str, required=True, default="cuda:0",help='GPU parameter'
     ) 
     parser.add_argument(
         '--run_param_search',type=warn_optuna,required=True,default=False,help='Whehter to run optuna param'
     )
+    parser.add_argument('--dev',type=bool,required=False,default=False,help='Specify a dev run. Subsamples training data to be just 10% so you can iterate faster')
     add_rand_crop_params(parser)
     add_rand_flip_params(parser)
     add_rand_affine_params(parser)
@@ -102,7 +103,10 @@ def build_args():
 
 def get_params(): 
     parser  = build_args()
-    args = parser.parse_args()
+    args = parser.parse_args() 
+    my_args = args.parse_args() 
+    arg_dict = vars(my_args)
+    return arg_dict
 def add_rand_crop_params(parser): 
     parser.add_argument(
         "--rand_crop_label_num_samples",
