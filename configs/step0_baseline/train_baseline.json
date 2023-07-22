@@ -23,5 +23,7 @@
 "rand_affine_scale_range":[-0.3,0.4],
 "rand_gauss_sigma": [0.01,0.02],
 "rand_shift_intensity_offset": 0.001,
-"rand_shift_intensity_prob": 0.75
+"rand_shift_intensity_prob": 0.75,
+"cuda":"cuda:0",
+"run_param_search":false
 }

@@ -1,17 +1,38 @@
 import argparse
 import json  
-import pdb 
+from collections import deque  #just for fun using dequeue instead of just a list for faster appends 
+from pprint import pprint 
 class LoadFromFile (argparse.Action):
     def __call__ (self, parser, namespace, values, option_string = None):
         data_dict =json.load(values)
-        arg_list = list()
-        for e in data_dict: 
-            arg_list.append(e)
-            arg_list.append(data_dict[e])
-        parser.parse_args(arg_list)
+        arg_list = deque()
+        action_dict = { e.option_strings[0]: e for e in parser._actions }
+        for i,e in enumerate(data_dict): 
+                arg_list.extend(self.__build_parse_arge__(e,data_dict,action_dict)) 
+        parser.parse_args(arg_list,namespace=namespace)
+        
+    def __build_parse_arge__(self,arg_key,arg_dict,file_action): 
+        arg_name =f"--{arg_key}" 
+        arg_val = str(arg_dict[arg_key]) 
+        file_action[arg_name].required=False 
+        return arg_name,arg_val
 
+def warn_optuna(s:str): 
+    """ Take string input of parser for optuna param and just output a warning 
+    Converts string to boolean for proper reading 
+    """ 
+    val = eval(s)
+    if val: 
+        print(val)
+        print(f"WARNING YOU HAVE SELECTED OPTUNA PARAM SEARCH. Most PARAMS WILL BE IGNORED")
+    return val
 def build_args():
-    """Parses args. Must include all hyperparameters you want to tune."""
+    """Parses args. Must include all hyperparameters you want to tune.
+
+    Special Note: 
+        Since i entirely expect to load from config files the behavior is 
+        1.  
+    """
     parser = argparse.ArgumentParser(
         description="Confguration for my deep learning model training for segmentation"
     )
@@ -23,22 +44,10 @@ def build_args():
     )  # TODO: uPDATE README TO EXPLAIN CONFI OF PICKLE FILE
     parser.add_argument(
         '--config_path',
-        required=True,
+        required=False,
         type=open,
         action=LoadFromFile,
         help = 'Path'
-    )
-    parser.add_argument(
-        "--vox_dim",
-        required=list,
-        type=int,
-        help="Number of voxels in a patch used during training (dim,dim,32)",
-    )
-    parser.add_argument(
-        "--pix_dim",
-        required=list,
-        type=float,
-        help="Pixel Dimension again  ( dimxdimxdim",
     )
     parser.add_argument(
         "--learn_rate",
@@ -55,8 +64,8 @@ def build_args():
     )
     parser.add_argument("--epochs", required=True, type=int, help="")
     parser.add_argument("--num_workers", type=int, required=True)
-    parser.add_argument("--spacing_vox_dim", type=list, required=True)
-    parser.add_argument("--spacing_pix_dim", type=list, required=True)
+    parser.add_argument("--spacing_vox_dim", type=json.loads, required=True)
+    parser.add_argument("--spacing_pix_dim", type=json.loads, required=True)
     parser.add_argument(
         "--spacing_img_interp", type=str, required=True, choices=["bilinear"]
     )
@@ -77,6 +86,12 @@ def build_args():
     parser.add_argument(
         "--orientation_axcode", type=str, required=True, default="RAS", choices=["RAS"],help='This is the orientation of the MRI/CT. Careful when selecting'
     ) 
+    parser.add_argument(
+        "--cuda", type=str, required=True, default="cuda:0",help='GPU parameter'
+    ) 
+    parser.add_argument(
+        '--run_param_search',type=warn_optuna,required=True,default=False,help='Whehter to run optuna param'
+    )
     add_rand_crop_params(parser)
     add_rand_flip_params(parser)
     add_rand_affine_params(parser)
@@ -119,8 +134,8 @@ def add_rand_shift_params(parser):
 def add_rand_gauss_params(parser): 
     parser.add_argument(
         '--rand_gauss_sigma',
-        required = True,
-        type = list,
+        required =False,
+        type = json.loads 
     )
 def add_rand_flip_params(parser:argparse.ArgumentParser): 
     parser.add_argument( 
@@ -131,22 +146,24 @@ def add_rand_flip_params(parser:argparse.ArgumentParser):
 def add_rand_affine_params(parser:argparse.ArgumentParser): 
     parser.add_argument(
         '--rand_affine_prob',
-        required= True , 
+        required=True , 
         type = float
     )
     parser.add_argument(
         '--rand_affine_rotation_range',
         required=True ,
-        type = list 
+        type = json.loads 
     )
     parser.add_argument(
         '--rand_affine_scale_range',
         required=True , 
-        type = list 
+        type = json.loads 
     )
 
 
     
 if __name__=='__main__': 
     args = build_args()
-    args.parse_args()
+    my_args = args.parse_args() 
+    arg_dict = vars(my_args)
+    pprint(arg_dict)
