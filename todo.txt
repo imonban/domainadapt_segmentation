@@ -1,11 +1,14 @@
-./source/train.py:88:        #TODO add support for continuing training by providing optinal path to checkpoint
-./source/train.py:95:    # TODO: make the dice metric and loss function modifiable
-./source/helper_utils/configs.py:46:    )  # TODO: uPDATE README TO EXPLAIN CONFI OF PICKLE FILE
-./source/helper_utils/configs.py:106:    parser.add_argument('--test_transforms',type=json.loads,required=True,help='List of Names of test transforms and augmentations in form [load] should be subset of train transforms') # TODO: asert test is subset of train excluding rands
+./source/batch_iterators/train_iterators.py:28:    global_step_count = 0  # TODO: resumable training would require a rewind of the clock. i.e aware of epoch and steps
+./source/batch_iterators/train_iterators.py:31:    )  # TODO think about how you could perhaps continue training
+./source/batch_iterators/train_iterators.py:34:    )  # TODO: can this be better
+./source/train.py:78:        # TODO add support for continuing training by providing optinal path to checkpoint
+./source/train.py:85:    # TODO: make the dice metric and loss function modifiable
+./source/helper_utils/configs.py:60:    )  # TODO: uPDATE README TO EXPLAIN CONFI OF PICKLE FILE
+./source/helper_utils/configs.py:147:    )  # TODO: asert test is subset of train excluding rands
 Binary file ./source/helper_utils/__pycache__/transforms.cpython-310.pyc matches
-./source/helper_utils/utils.py:25:    #TODO: MAKE IT SO I CAN USE THIS IN TENSORBOARD LOGGING 
-./source/helper_utils/utils.py:34:    #TODO USE THIS IN TEST PHASE OF FINAL MODEL 
-./source/helper_utils/transforms.py:42:        #TODO make it interchangeable with the GCP one 
-./source/helper_utils/transforms.py:81:        #TODO: SEARCH FOR REASONING TO HAVE VARIABLE X,Y,Z. I guess it would pick up on extra noise from resampling volumes? 
-./source/helper_utils/transforms.py:118:    TODO:  Do not understand why default monai doesn't have this. Cary over of past 
+./source/helper_utils/utils.py:57:    # TODO: MAKE IT SO I CAN USE THIS IN TENSORBOARD LOGGING
+./source/helper_utils/utils.py:67:    # TODO USE THIS IN TEST PHASE OF FINAL MODEL
+./source/helper_utils/transforms.py:39:        # TODO make it interchangeable with the GCP one
+./source/helper_utils/transforms.py:89:        # TODO: SEARCH FOR REASONING TO HAVE VARIABLE X,Y,Z. I guess it would pick up on extra noise from resampling volumes?
+./source/helper_utils/transforms.py:130:    TODO:  Do not understand why default monai doesn't have this. Cary over of past
 ./.git/hooks/pre-commit:3:grep -rnw 'TODO' . > ./todo.txt 

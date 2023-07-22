@@ -1,8 +1,9 @@
 from monai.networks.nets.unet import UNet
 
-def model_factory(config): 
-    model_name = config['model']
-    num_seg_labels = config['num_seg_labels']
+
+def model_factory(config):
+    model_name = config["model"]
+    num_seg_labels = config["num_seg_labels"]
     if model_name == "unet":
         net = UNet(
             spatial_dims=3,

@@ -3,22 +3,22 @@ from monai.data import DataLoader
 import os
 import random
 import os
-import helper_utils.configs as help_configs 
-import helper_utils.data_io as help_io 
-import helper_utils.transforms as help_transforms 
-import helper_utils.utils as help_utils 
+import helper_utils.configs as help_configs
+import helper_utils.data_io as help_io
+import helper_utils.transforms as help_transforms
+import helper_utils.utils as help_utils
 from batch_iterators.train_iterators import *
 from data_factories.kits_factory import kit_factory
 from monai.data import DataLoader
 from models.model_factory import model_factory
 from monai.losses import DiceCELoss
-import torch._dynamo 
+import torch._dynamo
 
 torch._dynamo.config.suppress_errors = True
 torch.multiprocessing.set_sharing_strategy("file_system")
 
 
-def main(): 
+def main():
     conf = help_configs.get_params()
     dset = kit_factory("cached")
     train, val, test = help_io.load_data(conf["data_path"])
@@ -32,26 +32,16 @@ def main():
     print(f"Len train is {len(train)}")
     print(f"Len val is {len(val)}")
     print(f"Len test is {len(test)}")
+    print(conf)
     lr = conf["learn_rate"]
     momentum = conf["momentum"]
     train_transform, val_transform = help_transforms.gen_transforms(conf)
     batch_size = conf["batch_size"]
     cache_dir = conf["cache_dir"]
-    os.makedirs(cache_dir,exist_ok=True)
-    train_ds = dset(
-        train,
-        transform=train_transform,
-        cache_dir=cache_dir),
-    val_ds = dset(
-        val,
-        transform=val_transform,
-        cache_dir=cache_dir 
-    )
-    test_ds = dset(
-        test,
-        transform=val_transform,
-        cache_dir=cache_dir 
-    )
+    os.makedirs(cache_dir, exist_ok=True)
+    train_ds = (dset(train, transform=train_transform, cache_dir=cache_dir),)
+    val_ds = dset(val, transform=val_transform, cache_dir=cache_dir)
+    test_ds = dset(test, transform=val_transform, cache_dir=cache_dir)
     num_workers = conf["num_workers"]
     if conf["train_mode"] == "debias" or conf["train_mode"] == "mixed":
         sampler = help_utils.makeWeightedsampler(train)
@@ -75,17 +65,17 @@ def main():
         collate_fn=help_transforms.ramonPad(),
     )
     test_loader = DataLoader(
-        test_ds ,
-        batch_size=1, 
-        shuffle=False, 
+        test_ds,
+        batch_size=1,
+        shuffle=False,
         num_workers=num_workers,
-        collate_fn=help_transforms.ramonPad()
+        collate_fn=help_transforms.ramonPad(),
     )
     loaders = (train_loader, val_loader, test_loader)
     DEVICE = torch.device(conf["device"])
     model = model_factory(config=conf)
     if "pretrained" in conf.keys():
-        #TODO add support for continuing training by providing optinal path to checkpoint
+        # TODO add support for continuing training by providing optinal path to checkpoint
         ck = torch.load(conf["pretrained"])
         model.load_state_dict(ck["state_dict"])
         print("state dict loaded")
@@ -96,7 +86,7 @@ def main():
     loss_function = DiceCELoss(
         include_background=True, reduction="mean", to_onehot_y=True, softmax=True
     )
-    if (conf["train_mode"] == "vanilla"):
+    if conf["train_mode"] == "vanilla":
         # lr should be 0.01 for these experiments
         optimizer = torch.optim.SGD(model.parameters(), lr, momentum=momentum)
         lr_scheduler = torch.optim.lr_scheduler.PolynomialLR(
@@ -112,5 +102,6 @@ def main():
             config=conf,
         )
 
+
 if __name__ == "__main__":
-    main() 
+    main()
