@@ -63,7 +63,7 @@ def get_transform(name,conf):
         return CropForegroundd(keys=[img_k,lbl_k],source_key=img_k)
     if name =='orient':
         ax_code = conf['orientation_axcode']
-        return Orientationd(keys=[img_k,lbl_k],axcodes='RAS')
+        return Orientationd(keys=[img_k,lbl_k],axcodes=ax_code)
     if name =='spacing':
         pix_dim = conf['spacing_pix_dim']
         vox_dim = conf['spacing_vox_dim']
@@ -87,7 +87,7 @@ def get_transform(name,conf):
         return RandShiftIntensityd(keys=[img_k],offsets=offset,prob=prob),
     if name =='rand_gauss':
         #TODO: SEARCH FOR REASONING TO HAVE VARIABLE X,Y,Z. I guess it would pick up on extra noise from resampling volumes? 
-        sigma_x = conf['rand_gauss_sigma_x']  
+        sigma_x = conf['rand_gauss_sigma']  
         return RandGaussianSmoothd(keys=[img_k],sigma_x=sigma_x,sigma_y=sigma_x,sigma_z=sigma_x),
     if name == 'rand_flip': 
         prob = conf['rand_flip_prob']
