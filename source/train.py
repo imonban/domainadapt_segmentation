@@ -20,11 +20,11 @@ torch.multiprocessing.set_sharing_strategy("file_system")
 
 def optuna_gen(conf_in,trial): 
     pass 
-def _parse() 
+def _parse():
     conf = help_configs.get_params() 
     if conf['run_param_search']:
         #setup optuna exp 
-        model_name = f"{conf['train_mode']}_{conf['model']}
+        model_name = f"{conf['train_mode']}_{conf['model']}"
         storage_name = f"sqlite:///media/Datacenter_storage/ramon_dataset_curations/domainadapt_segmentation/optuna_logs/{model_name}.db"
         study_name = 'loss_search'
         study = optuna.create_study(study_name =study_name,storage=storage_name,direction='maximize',load_if_exists=True)

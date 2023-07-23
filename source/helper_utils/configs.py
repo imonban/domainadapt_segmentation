@@ -28,7 +28,8 @@ class LoadFromFile(argparse.Action):
             )
         return arg_name, arg_val
 
-
+def parse_bool(s:str):
+    return eval(s) ==True 
 def warn_optuna(s: str):
     """Take string input of parser for optuna param and just output a warning
     Converts string to boolean for proper reading
@@ -99,7 +100,7 @@ def build_args():
     parser.add_argument("--scale_intensity_bmin", type=float, required=True, default=0)
     parser.add_argument("--scale_intensity_bmax", type=float, required=True, default=1)
     parser.add_argument(
-        "--scale_intensity_clip", type=bool, required=True, default=True
+        "--scale_intensity_clip", type=parse_bool, required=True, default=True
     )
     parser.add_argument(
         "--orientation_axcode",
@@ -121,7 +122,7 @@ def build_args():
     )
     parser.add_argument(
         "--dev",
-        type=bool,
+        type=parse_bool,
         required=False,
         default=False,
         help="Specify a dev run. Subsamples training data to be just 10% so you can iterate faster",
@@ -187,7 +188,7 @@ def add_rand_crop_params(parser):
     parser.add_argument(
         "--rand_crop_label_allow_smaller",
         required=True,
-        type=bool,
+        type=parse_bool,
     )
 
 
@@ -209,7 +210,7 @@ def add_rand_gauss_params(parser):
 
 
 def add_rand_flip_params(parser: argparse.ArgumentParser):
-    parser.add_argument("--rand_flip_prob", required=True, type=bool)
+    parser.add_argument("--rand_flip_prob", required=True, type=parse_bool)
 
 
 def add_rand_affine_params(parser: argparse.ArgumentParser):

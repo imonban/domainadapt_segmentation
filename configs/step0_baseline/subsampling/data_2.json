@@ -70,6 +70,6 @@
   "rand_shift_intensity_prob": 0.75,
   "device": "cuda:0",
   "run_param_search": false,
-  "dev": true,
+  "dev": false,
   "num_seg_labels": 2
 }
