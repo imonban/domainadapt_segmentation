@@ -18,14 +18,18 @@ def train_batch(
     conf = config
     img_k = conf["img_key_name"]
     lbl_k = conf["lbl_key_name"]
-    (train_loader,val_loader,_) = loaders  # prep my dataset loaders. during this phase we do not use the test_loader ever
+    (
+        train_loader,
+        val_loader,
+        _,
+    ) = loaders  # prep my dataset loaders. during this phase we do not use the test_loader ever
     max_epochs = config["epochs"]
     best_metric = -10000000  # default value  that needed initialization
     global_step_count = 0  # TODO: resumable training would require a rewind of the clock. i.e aware of epoch and steps
     log_path = help_utils.figure_version(
         conf["log_dir"]
     )  # TODO think about how you could perhaps continue training
-    weight_path = conf['log_dir'].replace('model_logs','model_checkpoints') 
+    weight_path = conf["log_dir"].replace("model_logs", "model_checkpoints")
     if not os.path.isdir(weight_path):
         os.makedirs(weight_path)
     if not os.path.isdir(log_path):
@@ -36,11 +40,16 @@ def train_batch(
         model.train()
         epoch_loss = 0
         step = 0
-        print('activating the data loader')
+        print("activating the data loader")
         for batch_data in tqdm(train_loader, total=len(train_loader)):
-            inputs, labels = (batch_data[img_k], batch_data[lbl_k]) 
+            inputs, labels = (batch_data[img_k], batch_data[lbl_k])
             if step == 0 and epoch % 2 == 0:
-                help_utils.write_batches(writer=writer,inputs=inputs.detach(),labels=labels.detach(),epoch=epoch)
+                help_utils.write_batches(
+                    writer=writer,
+                    inputs=inputs.detach(),
+                    labels=labels.detach(),
+                    epoch=epoch,
+                )
             optimizer.zero_grad()
             step += 1
             inputs = inputs.to(device)
@@ -60,7 +69,7 @@ def train_batch(
         lr_scheduler.step()
         writer.add_scalar("epoch_loss", epoch_loss, global_step=epoch)
         model.eval()
-        val_metric, val_l = eval_loop(model, val_loader, writer, epoch, "val",config)
+        val_metric, val_l = eval_loop(model, val_loader, writer, epoch, "val", config)
         if val_metric > best_metric:
             best_metric = val_metric
             best_metric_epoch = epoch + 1

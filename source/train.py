@@ -13,37 +13,47 @@ from monai.data import DataLoader
 from models.model_factory import model_factory
 from monai.losses import DiceCELoss
 import torch._dynamo
-import optuna 
+import optuna
+
 torch._dynamo.config.suppress_errors = True
 torch.multiprocessing.set_sharing_strategy("file_system")
 
 
-def optuna_gen(conf_in,trial): 
-    pass 
+def optuna_gen(conf_in, trial):
+    pass
+
+
 def _parse():
-    conf = help_configs.get_params() 
-    if conf['run_param_search']:
-        #setup optuna exp 
+    conf = help_configs.get_params()
+    if conf["run_param_search"]:
+        # setup optuna exp
         model_name = f"{conf['train_mode']}_{conf['model']}"
         storage_name = f"sqlite:///media/Datacenter_storage/ramon_dataset_curations/domainadapt_segmentation/optuna_logs/{model_name}.db"
-        study_name = 'loss_search'
-        study = optuna.create_study(study_name =study_name,storage=storage_name,direction='maximize',load_if_exists=True)
-        objective = lambda x: main(conf,x)
+        study_name = "loss_search"
+        study = optuna.create_study(
+            study_name=study_name,
+            storage=storage_name,
+            direction="maximize",
+            load_if_exists=True,
+        )
+        objective = lambda x: main(conf, x)
         unique_trials = 100
         if unique_trials > len(study.trials):
-            study.optimize(objective,n_tirals=100)
+            study.optimize(objective, n_tirals=100)
         pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
         complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
         print("Study statistics: ")
         print("  Number of finished trials: ", len(study.trials))
         print("  Number of pruned trials: ", len(pruned_trials))
         print("  Number of complete trials: ", len(complete_trials))
-    else: 
-        main(conf) 
-def main(conf_in,trial=None):
-    if trial: 
-        conf = optuna_gen(copy(conf_in),trial) 
-    else: 
+    else:
+        main(conf)
+
+
+def main(conf_in, trial=None):
+    if trial:
+        conf = optuna_gen(copy(conf_in), trial)
+    else:
         conf = conf_in
     dset = kit_factory("cached")
     train, val, test = help_io.load_data(conf["data_path"])
@@ -105,7 +115,7 @@ def main(conf_in,trial=None):
         model.load_state_dict(ck["state_dict"])
         print("state dict loaded")
     model = model.to(torch.float32).to(DEVICE)
-    #model = torch.compile(model, fullgraph=False, dynamic=True)
+    # model = torch.compile(model, fullgraph=False, dynamic=True)
 
     # TODO: make the dice metric and loss function modifiable
     loss_function = DiceCELoss(
@@ -115,7 +125,8 @@ def main(conf_in,trial=None):
         # lr should be 0.01 for these experiments
         optimizer = torch.optim.SGD(model.parameters(), lr, momentum=momentum)
         lr_scheduler = torch.optim.lr_scheduler.PolynomialLR(
-            optimizer, total_iters=conf["epochs"],
+            optimizer,
+            total_iters=conf["epochs"],
         )
         val_loss = train_batch(
             model,
@@ -125,8 +136,8 @@ def main(conf_in,trial=None):
             loss_function,
             device=DEVICE,
             config=conf,
-        ) 
+        )
 
 
 if __name__ == "__main__":
-    _parse() 
+    _parse()

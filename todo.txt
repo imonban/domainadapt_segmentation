@@ -1,12 +1,12 @@
-./source/batch_iterators/train_iterators.py:24:    global_step_count = 0  # TODO: resumable training would require a rewind of the clock. i.e aware of epoch and steps
-./source/batch_iterators/train_iterators.py:27:    )  # TODO think about how you could perhaps continue training
-./source/train.py:103:        # TODO add support for continuing training by providing optinal path to checkpoint
-./source/train.py:110:    # TODO: make the dice metric and loss function modifiable
-./source/helper_utils/configs.py:61:    )  # TODO: uPDATE README TO EXPLAIN CONFI OF PICKLE FILE
-./source/helper_utils/configs.py:148:    )  # TODO: asert test is subset of train excluding rands
+./source/batch_iterators/train_iterators.py:28:    global_step_count = 0  # TODO: resumable training would require a rewind of the clock. i.e aware of epoch and steps
+./source/batch_iterators/train_iterators.py:31:    )  # TODO think about how you could perhaps continue training
+./source/train.py:113:        # TODO add support for continuing training by providing optinal path to checkpoint
+./source/train.py:120:    # TODO: make the dice metric and loss function modifiable
+./source/helper_utils/configs.py:64:    )  # TODO: uPDATE README TO EXPLAIN CONFI OF PICKLE FILE
+./source/helper_utils/configs.py:151:    )  # TODO: asert test is subset of train excluding rands
 Binary file ./source/helper_utils/__pycache__/transforms.cpython-310.pyc matches
-./source/helper_utils/utils.py:48:    # TODO: MAKE IT SO I CAN USE THIS IN TENSORBOARD LOGGING
-./source/helper_utils/utils.py:57:    # TODO USE THIS IN TEST PHASE OF FINAL MODEL
+./source/helper_utils/utils.py:58:    # TODO: MAKE IT SO I CAN USE THIS IN TENSORBOARD LOGGING
+./source/helper_utils/utils.py:68:    # TODO USE THIS IN TEST PHASE OF FINAL MODEL
 ./source/helper_utils/transforms.py:39:        # TODO make it interchangeable with the GCP one
 ./source/helper_utils/transforms.py:89:        # TODO: SEARCH FOR REASONING TO HAVE VARIABLE X,Y,Z. I guess it would pick up on extra noise from resampling volumes?
 ./source/helper_utils/transforms.py:130:    TODO:  Do not understand why default monai doesn't have this. Cary over of past

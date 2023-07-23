@@ -11,6 +11,8 @@ import torch
 def subsample_list(my_list: list, perc: float):
     num_samples = int(math.floor(len(my_list) * perc))
     return random.sample(my_list, num_samples)
+
+
 def figure_version(path: str, load_past=False):
     #  when saving model  checkpoints and logs. Need to make sure i don't overwrite previous experiemtns
     avail = glob(f"{path}/run_*")
@@ -24,15 +26,21 @@ def figure_version(path: str, load_past=False):
         else:
             ver = f"run_{oldest+1}"
     return os.path.join(path, ver)
+
+
 def make_8bit(arr: torch.Tensor):
     arr = arr + arr.min().abs()  #  make 0 the min  value
     return ((torch.maximum(arr, torch.tensor(0)) / arr.max()) * 255).to(torch.uint8)
+
+
 def proc_batch(imgs: torch.Tensor, labels: torch.Tensor):
     img_l = list()
     lbl_l = list()
     for e in range(imgs.shape[0]):  # iterate trhough batch
         l_idx = labels[e][0].sum(dim=0).sum(dim=0).argmax()
-        img_s = imgs[e][0][:, :, l_idx].unsqueeze(0).unsqueeze(0)# the [0] after e is to account for  channel dimension 
+        img_s = (
+            imgs[e][0][:, :, l_idx].unsqueeze(0).unsqueeze(0)
+        )  # the [0] after e is to account for  channel dimension
         lbl_s = labels[e][0][:, :, l_idx].unsqueeze(0).unsqueeze(0)
         img_l.append(img_s)
         lbl_l.append(lbl_s)
@@ -43,7 +51,9 @@ def write_batches(writer: SummaryWriter, inputs, labels, epoch):
     # do some processing then
     out_imgs, out_lbls = proc_batch(imgs=inputs, labels=labels)
     writer.add_images("train_set_img", out_imgs, global_step=epoch)
-    writer.add_images("train_set_lbl", out_lbls,  global_step=epoch)
+    writer.add_images("train_set_lbl", out_lbls, global_step=epoch)
+
+
 def show_large_slice(input_dict):
     # TODO: MAKE IT SO I CAN USE THIS IN TENSORBOARD LOGGING
     lbl = input_dict["label"]
@@ -52,6 +62,7 @@ def show_large_slice(input_dict):
     img = input_dict["image"][0, :, :, l_idx]
     plt.imshow(img, cmap="gray")
     plt.imshow(lbl_max, alpha=0.5)
+
 
 def dice_score(truth, pred):
     # TODO USE THIS IN TEST PHASE OF FINAL MODEL

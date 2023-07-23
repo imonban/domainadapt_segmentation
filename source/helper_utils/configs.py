@@ -28,8 +28,11 @@ class LoadFromFile(argparse.Action):
             )
         return arg_name, arg_val
 
-def parse_bool(s:str):
-    return eval(s) ==True 
+
+def parse_bool(s: str):
+    return eval(s) == True
+
+
 def warn_optuna(s: str):
     """Take string input of parser for optuna param and just output a warning
     Converts string to boolean for proper reading
