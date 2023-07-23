@@ -44,7 +44,6 @@ def train_batch(
             optimizer.zero_grad()
             step += 1
             inputs = inputs.to(device)
-            breakpoint()
             labels = labels.to(device).long()
             outputs = model(inputs)
             loss = loss_function(outputs, labels)
@@ -61,7 +60,7 @@ def train_batch(
         lr_scheduler.step()
         writer.add_scalar("epoch_loss", epoch_loss, global_step=epoch)
         model.eval()
-        val_metric, val_l = eval_loop(model, val_loader, writer, device, epoch, "val")
+        val_metric, val_l = eval_loop(model, val_loader, writer, epoch, "val",config)
         if val_metric > best_metric:
             best_metric = val_metric
             best_metric_epoch = epoch + 1
