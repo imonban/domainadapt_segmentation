@@ -13,13 +13,38 @@ from monai.data import DataLoader
 from models.model_factory import model_factory
 from monai.losses import DiceCELoss
 import torch._dynamo
-
+import optuna 
 torch._dynamo.config.suppress_errors = True
 torch.multiprocessing.set_sharing_strategy("file_system")
 
 
-def main():
-    conf = help_configs.get_params()
+def optuna_gen(conf_in,trial): 
+    pass 
+def _parse() 
+    conf = help_configs.get_params() 
+    if conf['run_param_search']:
+        #setup optuna exp 
+        model_name = f"{conf['train_mode']}_{conf['model']}
+        storage_name = f"sqlite:///media/Datacenter_storage/ramon_dataset_curations/domainadapt_segmentation/optuna_logs/{model_name}.db"
+        study_name = 'loss_search'
+        study = optuna.create_study(study_name =study_name,storage=storage_name,direction='maximize',load_if_exists=True)
+        objective = lambda x: main(conf,x)
+        unique_trials = 100
+        if unique_trials > len(study.trials):
+            study.optimize(objective,n_tirals=100)
+        pruned_trials = study.get_trials(deepcopy=False, states=[TrialState.PRUNED])
+        complete_trials = study.get_trials(deepcopy=False, states=[TrialState.COMPLETE])
+        print("Study statistics: ")
+        print("  Number of finished trials: ", len(study.trials))
+        print("  Number of pruned trials: ", len(pruned_trials))
+        print("  Number of complete trials: ", len(complete_trials))
+    else: 
+        main(conf) 
+def main(conf_in,trial=None):
+    if trial: 
+        conf = optuna_gen(copy(conf_in),trial) 
+    else: 
+        conf = conf_in
     dset = kit_factory("cached")
     train, val, test = help_io.load_data(conf["data_path"])
     # use short circuitting to check if dev is  a field
@@ -92,7 +117,7 @@ def main():
         lr_scheduler = torch.optim.lr_scheduler.PolynomialLR(
             optimizer, total_iters=conf["epochs"]
         )
-        train_batch(
+        val_loss = train_batch(
             model,
             loaders,
             optimizer,
@@ -100,8 +125,8 @@ def main():
             loss_function,
             device=DEVICE,
             config=conf,
-        )
+        ) 
 
 
 if __name__ == "__main__":
-    main()
+    _parse() 

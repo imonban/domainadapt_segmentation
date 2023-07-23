@@ -1,7 +1,7 @@
 ./source/batch_iterators/train_iterators.py:24:    global_step_count = 0  # TODO: resumable training would require a rewind of the clock. i.e aware of epoch and steps
 ./source/batch_iterators/train_iterators.py:27:    )  # TODO think about how you could perhaps continue training
-./source/train.py:78:        # TODO add support for continuing training by providing optinal path to checkpoint
-./source/train.py:85:    # TODO: make the dice metric and loss function modifiable
+./source/train.py:103:        # TODO add support for continuing training by providing optinal path to checkpoint
+./source/train.py:110:    # TODO: make the dice metric and loss function modifiable
 ./source/helper_utils/configs.py:60:    )  # TODO: uPDATE README TO EXPLAIN CONFI OF PICKLE FILE
 ./source/helper_utils/configs.py:147:    )  # TODO: asert test is subset of train excluding rands
 Binary file ./source/helper_utils/__pycache__/transforms.cpython-310.pyc matches
