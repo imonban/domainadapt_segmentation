@@ -115,7 +115,7 @@ def main(conf_in,trial=None):
         # lr should be 0.01 for these experiments
         optimizer = torch.optim.SGD(model.parameters(), lr, momentum=momentum)
         lr_scheduler = torch.optim.lr_scheduler.PolynomialLR(
-            optimizer, total_iters=conf["epochs"]
+            optimizer, total_iters=conf["epochs"],
         )
         val_loss = train_batch(
             model,

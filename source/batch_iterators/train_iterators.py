@@ -44,7 +44,7 @@ def train_batch(
             optimizer.zero_grad()
             step += 1
             inputs = inputs.to(device)
-            labels = labels.to(device).long()
+            labels = labels.to(device)
             outputs = model(inputs)
             loss = loss_function(outputs, labels)
             loss.backward()
@@ -87,7 +87,7 @@ def train_batch(
 def eval_loop(model, loader, writer, epoch, dset_name, config):
     roi_size = config["spacing_vox_dim"]
     img_k = config["img_key_name"]
-    lbl_k = config["img_key_name"]
+    lbl_k = config["lbl_key_name"]
     device = config["device"]
     num_seg_labels = config["num_seg_labels"]
     metric = DiceMetric(include_background=True, reduction="mean")
