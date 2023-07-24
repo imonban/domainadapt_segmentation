@@ -66,9 +66,9 @@ def get_transform(name, conf):
         vox_dim = conf["spacing_vox_dim"]
         num_samples = conf["rand_crop_label_num_samples"]
         ps_samples = conf["rand_crop_label_positive_samples"]
-        ps_samples = conf["rand_crop_label_allow_smaller"]
+        allow_smaller = conf["rand_crop_label_allow_smaller"]
         neg_samples = 1 - ps_samples
-        assert ps_samples <= 1
+        assert ps_samples < 1
         return RandCropByPosNegLabeld(
             keys=[img_k, lbl_k],
             spatial_size=vox_dim,
@@ -76,7 +76,7 @@ def get_transform(name, conf):
             label_key=lbl_k,
             pos=ps_samples,
             neg=neg_samples,
-            allow_smaller=True,
+            allow_smaller=allow_smaller,
         )
     if name == "spatial_pad":
         vox_dim = conf["spacing_vox_dim"]

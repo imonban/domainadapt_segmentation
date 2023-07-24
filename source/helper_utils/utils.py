@@ -47,11 +47,11 @@ def proc_batch(imgs: torch.Tensor, labels: torch.Tensor):
     return torch.cat(img_l, axis=0), torch.cat(lbl_l, axis=0)
 
 
-def write_batches(writer: SummaryWriter, inputs, labels, epoch):
+def write_batches(writer: SummaryWriter, inputs, labels, epoch,dset=None):
     # do some processing then
     out_imgs, out_lbls = proc_batch(imgs=inputs, labels=labels)
-    writer.add_images("train_set_img", out_imgs, global_step=epoch)
-    writer.add_images("train_set_lbl", out_lbls, global_step=epoch)
+    writer.add_images(f"{dset}_set_img", out_imgs, global_step=epoch)
+    writer.add_images(f"{dset}_set_lbl", out_lbls, global_step=epoch)
 
 
 def show_large_slice(input_dict):

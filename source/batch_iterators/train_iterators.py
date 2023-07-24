@@ -49,6 +49,7 @@ def train_batch(
                     inputs=inputs.detach(),
                     labels=labels.detach(),
                     epoch=epoch,
+                    dset='train'
                 )
             optimizer.zero_grad()
             step += 1
@@ -106,8 +107,17 @@ def eval_loop(model, loader, writer, epoch, dset_name, config):
     dice_scores = list()
     post_pred = Compose([AsDiscrete(argmax=True, to_onehot=num_seg_labels)])
     post_label = Compose([AsDiscrete(to_onehot=num_seg_labels)])
+    _step = 0 
     with torch.no_grad():
         for val_data in tqdm(loader, total=len(loader)):
+            if _step==0 and epoch==0: 
+                help_utils.write_batches(
+                    writer=writer,
+                    inputs=val_data[img_k].detach(),
+                    labels=val_data[lbl_k].detach(),
+                    epoch=epoch,
+                    dset='val'
+                )
             val_inputs, val_labels = (
                 val_data[img_k].to(device),
                 val_data[lbl_k].to(device),
