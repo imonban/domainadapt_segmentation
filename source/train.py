@@ -121,7 +121,7 @@ def main(conf_in, trial=None):
     loss_function = DiceCELoss(
         include_background=True, reduction="mean", to_onehot_y=True, softmax=True
     )
-    if conf["train_mode"] == "vanilla":
+    if conf["train_mode"] == "vanilla" or conf['train_mode']=='mixed':
         # lr should be 0.01 for these experiments
         optimizer = torch.optim.SGD(model.parameters(), lr, momentum=momentum)
         lr_scheduler = torch.optim.lr_scheduler.PolynomialLR(

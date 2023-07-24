@@ -157,7 +157,7 @@ def build_args():
         "--train_mode",
         type=str,
         required=True,
-        choices=["vanilla", "debias", "dinsdale"],
+        choices=["vanilla", "debias", "dinsdale","mixed"],
     )
     parser.add_argument("--log_dir", type=str, required=True)
     add_rand_crop_params(parser)
