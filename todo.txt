@@ -2,6 +2,7 @@
 ./source/batch_iterators/train_iterators.py:31:    )  # TODO think about how you could perhaps continue training
 ./source/train.py:113:        # TODO add support for continuing training by providing optinal path to checkpoint
 ./source/train.py:120:    # TODO: make the dice metric and loss function modifiable
+./source/train.py:140:    #TODO: ADD TESTING OF THE BEST MODEL 
 ./source/helper_utils/configs.py:64:    )  # TODO: uPDATE README TO EXPLAIN CONFI OF PICKLE FILE
 ./source/helper_utils/configs.py:151:    )  # TODO: asert test is subset of train excluding rands
 Binary file ./source/helper_utils/__pycache__/transforms.cpython-310.pyc matches

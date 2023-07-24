@@ -137,6 +137,7 @@ def main(conf_in, trial=None):
             device=DEVICE,
             config=conf,
         )
+    #TODO: ADD TESTING OF THE BEST MODEL 
 
 
 if __name__ == "__main__":
