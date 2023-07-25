@@ -82,3 +82,9 @@ def makeWeightedsampler(ds):
         sample_weight.append(cls_weights[e])
     sample_weight = torch.tensor(sample_weight)
     return WeightedRandomSampler(sample_weight, len(sample_weight))
+
+def load_weights(weight_path): 
+    ck = torch.load(weight_path,map_location='cpu') 
+    conf = ck['conf']
+    weights = ck['state_dict'] 
+    return conf,weights 

@@ -3,6 +3,8 @@
 ./source/train.py:113:        # TODO add support for continuing training by providing optinal path to checkpoint
 ./source/train.py:120:    # TODO: make the dice metric and loss function modifiable
 ./source/train.py:140:    #TODO: ADD TESTING OF THE BEST MODEL 
+./source/test.py:34:    bin_preds = True #TODO: is it woth having continious outputs 
+./source/test.py:71:        test = test[-1] # TODO: DON'T KEEP THIS FOREVER 
 ./source/helper_utils/configs.py:64:    )  # TODO: uPDATE README TO EXPLAIN CONFI OF PICKLE FILE
 ./source/helper_utils/configs.py:151:    )  # TODO: asert test is subset of train excluding rands
 Binary file ./source/helper_utils/__pycache__/transforms.cpython-38.pyc matches

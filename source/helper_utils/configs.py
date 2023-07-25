@@ -168,12 +168,24 @@ def build_args():
 
     return parser
 
-
+def build_test_args(): 
+    parser = argparse.ArgumentParser(
+        description="Confguration for my deep learning model testing for segmentation"
+    )
+    parser.add_argument('--model_weight',required=True) 
+    parser.add_argument('--output_dir',required=True)
+    parser.add_argument('--device',default='cuda:0',required=False)
+    return parser
 def get_params():
     args = build_args()
     my_args = args.parse_args()
-    arg_dict = vars(my_args)
+    arg_dict = vars(my_args) 
     return arg_dict
+def get_test_params(): 
+    args = build_test_args() 
+    my_args = args.parse_args()
+    arg_dict = vars(my_args) 
+    return arg_dict 
 
 
 def add_rand_crop_params(parser):
