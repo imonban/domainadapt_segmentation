@@ -1,7 +1,7 @@
 {
   "data_path": "/media/Datacenter_storage/ramon_dataset_curations/domainadapt_segmentation/data/data_9.pkl",
   "cache_dir": "/home/m261066/cache_3/",
-  "log_dir": "/media/Datacenter_storage/ramon_dataset_curations/domainadapt_segmentation/model_logs/model_mixed_sampling_9_p",
+  "log_dir": "/media/Datacenter_storage/ramon_dataset_curations/domainadapt_segmentation/model_logs/step5_model_mixed_sampling_9_p",
   "batch_size": 2,
   "learn_rate": 0.01,
   "momentum": 0.99,
@@ -15,7 +15,6 @@
     "load",
     "channel_first",
     "scale_intensity",
-    "crop_foreground",
     "orient",
     "spacing",
     "rand_crop_label",
@@ -28,7 +27,6 @@
     "load",
     "channel_first",
     "scale_intensity",
-    "crop_foreground",
     "orient",
     "spacing"
   ],

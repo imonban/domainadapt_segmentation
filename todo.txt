@@ -5,6 +5,7 @@
 ./source/train.py:140:    #TODO: ADD TESTING OF THE BEST MODEL 
 ./source/helper_utils/configs.py:64:    )  # TODO: uPDATE README TO EXPLAIN CONFI OF PICKLE FILE
 ./source/helper_utils/configs.py:151:    )  # TODO: asert test is subset of train excluding rands
+Binary file ./source/helper_utils/__pycache__/transforms.cpython-38.pyc matches
 Binary file ./source/helper_utils/__pycache__/transforms.cpython-310.pyc matches
 ./source/helper_utils/utils.py:58:    # TODO: MAKE IT SO I CAN USE THIS IN TENSORBOARD LOGGING
 ./source/helper_utils/utils.py:68:    # TODO USE THIS IN TEST PHASE OF FINAL MODEL
